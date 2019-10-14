@@ -1,0 +1,64 @@
+<project name="final_rainforest" default="compile" basedir=".">
+
+	<!-- Property Definitions
+
+		 j2ee.jar		Location of J2EE JAR filE
+		 deploy.home	Deployment directory for the web application
+		 docs.home		JavaDoc directory
+	-->
+
+
+	<!-- Read in the 'build.properties' file -->
+	<property file="build.properties"/>
+
+
+	<property name="crs517.home" value="../.." />
+	<property name="j2ee.jar" value="${crs517.home}/j2ee_lib/j2ee.jar" />
+	<property name="deploy.home" value="${crs517.home}/sourcecode/${exercise.directory}/bin" />
+	<property name="docs.home" value="docs" />
+	<property name="source.home" value="src" />
+
+
+	<target name="compile" description="Compile the files">
+
+		<!-- display exercise information: title and directory -->
+		<dirname property="exercise.dirname" file="build.xml"/>
+		<echo message="${exercise.title}"/>
+		<echo message="Directory: ${exercise.dirname}"/>	
+		
+		<javac classpath="${j2ee.jar}" 
+			   srcdir="${source.home}" 
+			   destdir="${deploy.home}" 
+			   deprecation="on" />
+	</target>
+
+
+	<target name="clean" description="Clean the deployment home">
+		<delete quiet="true">
+			<fileset dir="${deploy.home}/rain" />
+		</delete>	
+	</target>
+
+
+	<target name="all" depends="clean,compile" description="Performs all tasks: clean and compile" />
+
+
+	<target name="javadoc" description="Creates JavaDoc">
+		<echo message="Generating JavaDoc for ${exercise.title}"/>
+		
+		<javadoc sourcefiles="${exercise.javadoc.sourcefiles}"
+				 destdir="${docs.home}"
+				 windowtitle="${exercise.title}"
+				 nohelp="true"
+				 author="true"
+				 use="true">
+			<link offline="true" href="../../../../jdk/docs/api" packagelistLoc="c:\jdk\docs\api"/>
+			<link offline="true" href=" ../../../../spring-framework-1.2.6/docs" packagelistLoc="c:\spring-framework-1.2.6/docs/api"/>
+			<classpath>
+				<pathelement location="${deploy.home}"/>
+				<pathelement location="${j2ee.jar}"/>
+			</classpath>
+		</javadoc>
+	</target>
+
+</project>
